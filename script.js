@@ -1,11 +1,10 @@
-
 // Let's first define the operators and their functions
 const operations = {
-    '/': function(a,b) { return a/b;},
-    '*': function(a,b) { return a*b;},
-    '-': function(a,b) { return a-b;},
+    "÷": function(a,b) { return a/b;},
+    "×": function(a,b) { return a*b;},
+    "-": function(a,b) { return a-b;},
     // using parseFloat is necessary, otherwise it will result in string concatenation
-    '+': function(a,b) { return parseFloat(a)+parseFloat(b);}
+    "+": function(a,b) { return parseFloat(a)+parseFloat(b);}
 }
 
 const operatorChars = Object.keys(operations);
@@ -20,10 +19,10 @@ let resultDisplayed = false; // flag to keep an eye on what output is displayed
 for (let i = 0; i < numbers.length; i++) {
     numbers[i].addEventListener("click", function(e) {
         // storing current input string and its last character in variables - used later
-        const currentString = input.innerHTML;
-        const lastChar = currentString[currentString.length - 1];
+        var currentString = input.innerHTML;
+        var lastChar = currentString[currentString.length - 1];
 
-        // if result is not displayed, just keep adding
+        // if result is not diplayed, just keep adding
         if (resultDisplayed === false) {
             input.innerHTML += e.target.innerHTML;
 
@@ -54,7 +53,8 @@ for (let i = 0; i < operators.length; i++) {
         const lastChar = currentString[currentString.length - 1];
         // if last character entered is an operator, replace it with the currently pressed one
         if (operatorChars.indexOf(lastChar) >= 0) {
-            input.innerHTML = currentString.substring(0, currentString.length - 1) + e.target.innerHTML;
+            const newString = currentString.substring(0, currentString.length - 1) + e.target.innerHTML;
+            input.innerHTML = newString;
 
             // if this isn't the first key pressed
         } else if (currentString.length !== 0) {
@@ -70,13 +70,13 @@ for (let i = 0; i < operators.length; i++) {
 result.addEventListener("click", function() {
 
     // this is the string that we will be processing eg. -10+26+33-56*34/23
-    const inputString = input.innerHTML;
+    var inputString = input.innerHTML;
     // forming an array of numbers. eg for above string it will be: numbers = ["10", "26", "33", "56", "34", "23"]
-    const numbers = inputString.split(/[+\-×÷]/g);
+    var numbers = inputString.split(/[+\-×÷]/g);
 
     // forming an array of operators. for above string it will be: operators = ["+", "+", "-", "*", "/"]
     // first we replace all the numbers and dot with empty string and then split
-    const operators = inputString.replace(/[0-9]|\./g, "").split("");
+    var operators = inputString.replace(/[0-9]|\./g, "").split("");
 
     // now we are looping through the array and doing one operation at a time.
     // the operations will execute according to their order in the operatorChars array
@@ -86,12 +86,12 @@ result.addEventListener("click", function() {
     for (let i = 0; i < operatorChars.length; i++) {
         const currentOperator = operatorChars[i];
         const currentOperation = operations[currentOperator];
-        const nextOperationToExecute = operators.indexOf(currentOperator);
+        let nextOperationToExecute = operators.indexOf(currentOperator);
         while (nextOperationToExecute !== -1) {
-            var nextResult = currentOperation(numbers[nextOperationToExecute], numbers[nextOperationToExecute + 1]);
+            const nextResult = currentOperation(numbers[nextOperationToExecute], numbers[nextOperationToExecute + 1]);
             numbers.splice(nextOperationToExecute, 2, nextResult);
             operators.splice(nextOperationToExecute, 1);
-            operators.indexOf(currentOperator);
+            nextOperationToExecute = operators.indexOf(currentOperator);
         }
     }
 
